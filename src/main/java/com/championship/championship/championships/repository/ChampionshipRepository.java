@@ -15,15 +15,4 @@ public interface ChampionshipRepository extends JpaRepository<Championship, Inte
     boolean countChampionshipByNameAndYear(@Param("championshipName") String championshipName,
                                            @Param("championshipYear") Integer championshipYear);
 
-    @Query(nativeQuery = true,
-            value = "UPDATE championship c " +
-                    "SET c.start = true " +
-                    "WHERE c.id = :id")
-    Object startChampionship(@Param("id") Integer id);
-
-    @Query(nativeQuery = true,
-            value = "UPDATE championship c " +
-                    "SET c.finish = true " +
-                    "WHERE c.id = :id ")
-    Object finishChampionship(@Param("id") Integer id);
 }

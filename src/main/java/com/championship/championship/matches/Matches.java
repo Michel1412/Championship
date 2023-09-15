@@ -27,4 +27,19 @@ public class Matches {
     @ManyToOne
     @JoinColumn(name = "championship")
     private Championship championshipId;
+
+    @Column(name = "home_team_goals")
+    private Integer homeTeamGoals;
+
+    @Column(name = "visiting_team_goals")
+    private Integer vistingTeamGoals;
+
+    @Column(name = "match_date")
+    private Integer matchDate;
+
+    @Column(name = "match_started")
+    private Integer matchStarted;
+
+    @Column(name = "match_finish")
+    private Integer matchFinished;
 }

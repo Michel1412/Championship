@@ -5,6 +5,8 @@ import com.championship.championship.teams.repository.TeamsRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
+
 @Service
 public class TeamsService {
 
@@ -15,6 +17,11 @@ public class TeamsService {
     }
 
     public Object createTeams(Teams teams) {
+//        Calendar minimusDate = Calendar.getInstance();
+//        System.out.println(minimusDate);
+//        System.out.println(minimusDate.get(5));
+
+        //usado para testes!!!!!
         this.validateTeamName(teams.getName());
         Teams team = new Teams();
         team.setName(teams.getName());
