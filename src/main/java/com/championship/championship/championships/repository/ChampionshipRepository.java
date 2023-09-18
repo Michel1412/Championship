@@ -1,9 +1,12 @@
 package com.championship.championship.championships.repository;
 
 import com.championship.championship.championships.Championship;
+import com.championship.championship.classifications_table.ClassificationsTable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface ChampionshipRepository extends JpaRepository<Championship, Integer> {
 
@@ -15,4 +18,16 @@ public interface ChampionshipRepository extends JpaRepository<Championship, Inte
     boolean countChampionshipByNameAndYear(@Param("championshipName") String championshipName,
                                            @Param("championshipYear") Integer championshipYear);
 
+    @Query(nativeQuery = true,
+            value = "SELECT * " +
+                    "FROM championship c " +
+                    "WHERE c.year = :year ")
+    List<Championship> findAllByYear(@Param("year") int year);
+
+    @Query(nativeQuery = true,
+            value = "SELECT * " +
+                    "FROM classification_table ct " +
+                    "WHERE ct.championship = :id " +
+                    "ORDER BY points DESC ")
+    List<ClassificationsTable> findAllTeamsByChampionship(@Param("id") Integer id);
 }

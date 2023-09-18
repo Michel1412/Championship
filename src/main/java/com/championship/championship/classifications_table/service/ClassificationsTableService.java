@@ -33,4 +33,9 @@ public class ClassificationsTableService {
         return this.classificationsTableRepository.findByTeamIdAndChampionship(teamId, championshipId);
     }
 
+    public Integer countTeamsOfChampionship(Integer championshipId) {
+        int totalTeams = this.classificationsTableRepository.countTeamsOfChampionship(championshipId);
+        return totalTeams * (totalTeams - 1 );
+    }
+
 }
