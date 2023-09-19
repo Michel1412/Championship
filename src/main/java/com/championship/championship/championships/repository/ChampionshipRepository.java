@@ -24,10 +24,5 @@ public interface ChampionshipRepository extends JpaRepository<Championship, Inte
                     "WHERE c.year = :year ")
     List<Championship> findAllByYear(@Param("year") int year);
 
-    @Query(nativeQuery = true,
-            value = "SELECT * " +
-                    "FROM classification_table ct " +
-                    "WHERE ct.championship = :id " +
-                    "ORDER BY points DESC ")
-    List<ClassificationsTable> findAllTeamsByChampionship(@Param("id") Integer id);
+
 }

@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ClassificationsTableRepository extends JpaRepository<ClassificationsTable, Integer> {
 
@@ -33,4 +35,18 @@ public interface ClassificationsTableRepository extends JpaRepository<Classifica
                     "FROM classification_table ct " +
                     "WHERE ct.team = :teamId ")
     boolean countTeamsOnTablesById(@Param("teamId") Integer id);
+
+    @Query(nativeQuery = true,
+            value = "SELECT * " +
+                    "FROM classification_table ct " +
+                    "WHERE ct.championship = :id " +
+                    "ORDER BY points DESC ")
+    List<ClassificationsTable> findAllTeamsByChampionship(@Param("id") Integer id);
+
+    @Query(nativeQuery = true,
+            value = "SELECT COUNT(*) > 0 " +
+                    "FROM classification_table ct " +
+                    "WHERE ct.championship = :id " +
+                    "AND ct.team = :team ")
+    boolean findTeamByChampionship(@Param("team") Integer id,@Param("id") Integer championshipId);
 }

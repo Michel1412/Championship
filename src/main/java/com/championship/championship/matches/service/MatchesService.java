@@ -12,6 +12,7 @@ import com.championship.championship.teams.repository.TeamsRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.websocket.ClientEndpoint;
 import java.util.Calendar;
 import java.util.Objects;
 import java.util.Random;
@@ -127,29 +128,27 @@ public class MatchesService {
 
     private void validateTeamsCanPlay(Teams homeTeam, Teams visitingTeam, Calendar matchDate) {
         Calendar minimusDate = Calendar.getInstance();
-        Calendar yesterday = Calendar.getInstance();
-        Calendar tomorrow = Calendar.getInstance();
-        yesterday.set(2,matchDate.get(2));
-        yesterday.set(3, matchDate.get(3));
-        yesterday.set(7, matchDate.get(7) - 1);
-        tomorrow.set(2,matchDate.get(2));
-        tomorrow.set(3, matchDate.get(3));
-        tomorrow.set(7, matchDate.get(7) + 1);
+        minimusDate.add(Calendar.DAY_OF_MONTH, 3);
+        Calendar yesterday = (Calendar)matchDate.clone();
+        yesterday.add(Calendar.DAY_OF_MONTH, -1);
+        Calendar tomorrow = (Calendar)matchDate.clone();
+        tomorrow.add(Calendar.DAY_OF_MONTH, 1);
+
         String msg = "";
         if (homeTeam.equals(visitingTeam)) {
             throw new RuntimeException("Não é possivel marcar jogos entre times iguais!");
         }
-        if ((minimusDate.get(6) + 3) > matchDate.get(6) && minimusDate.get(2) == matchDate.get(2)) {
-            msg = "Muito proximo do dia de hoje!";
+        if (matchDate.compareTo(minimusDate) < 0) {
+            msg += " Muito proximo do dia de hoje!";
         }
         if (this.matchesRepository.findMatchDate(matchDate,tomorrow,yesterday, homeTeam)) {
-            msg = "Muito proximo da data de outo jogo do time da casa!";
+            msg += " Muito proximo da data de outo jogo do time da casa!";
         }
         if (this.matchesRepository.findMatchDate(matchDate,tomorrow,yesterday, visitingTeam)) {
-            msg = "Muito proximo da data de outo jogo do time visitante!";
+            msg += " Muito proximo da data de outo jogo do time visitante!";
         }
         if (!msg.isEmpty()) {
-            throw new RuntimeException("Não foi possivel marcar o jogo. " + msg);
+            throw new RuntimeException("Não foi possivel marcar o jogo." + msg);
         }
     }
 
@@ -171,10 +170,18 @@ public class MatchesService {
     }
 
     private void validateHomeAndVisitingTeams(Teams homeTeam, Teams visitingTeam, Championship championship) {
+        this.validateTeamIsInChampionship(homeTeam, championship);
+        this.validateTeamIsInChampionship(visitingTeam, championship);
         if (this.matchesRepository.countPlayByHomeVisitingAndChampionship(homeTeam, visitingTeam, championship)) {
             throw new RuntimeException("Esse jogo já aconteceu nesse campeonato!");
         }
 
+    }
+
+    private void validateTeamIsInChampionship(Teams homeTeam, Championship championship) {
+        if (!this.classificationsTableRepository.findTeamByChampionship(homeTeam.getId(), championship.getChampionshipId())) {
+            throw new RuntimeException("O time " + homeTeam.getName() + " não paritcipa do(a) " + championship.getChampionshipName() + "!");
+        }
     }
 
     private Teams validTeams(Integer teamsID) {

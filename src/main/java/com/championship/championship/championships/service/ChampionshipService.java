@@ -67,6 +67,17 @@ public class ChampionshipService {
         return ResponseEntity.ok("O campeonato " + championship.getChampionshipName() + " terminou! Foi bom enquanto durou, tempo de descanço!");
     }
 
+    public Object deleteChampionship(Integer id) {
+        Championship championship = this.validateExistsChampionship(id);
+        try {
+            this.validIfItAlreadyStarted(championship);
+        } catch (RuntimeException re) {
+            throw new RuntimeException(re.getMessage() + " Impossivel deletar!");
+        }
+        this.championshipRepository.delete(championship);
+        return ResponseEntity.ok("Campeonato deletado com sucesso!");
+    }
+
     private void createTableWithTeams(Integer[] teams, Championship championship) {
         for (Integer teamsId:teams) {
             Teams team = this.teamsRepository.findById(teamsId).orElseThrow(() -> {
@@ -135,9 +146,6 @@ public class ChampionshipService {
 
     public List<ClassificationsTable> findAllTeamsByChampionship(Integer id) {
         this.validateExistsChampionship(id);
-        if (this.championshipRepository.findAllTeamsByChampionship(id).isEmpty()) {
-            throw new RuntimeException("Não existe times nesse campeonato!");
-        }
-        return this.championshipRepository.findAllTeamsByChampionship(id);
+        return this.classificationsTableService.listAllTeamsByChampionship(id);
     }
 }

@@ -6,6 +6,9 @@ import com.championship.championship.classifications_table.repository.Classifica
 import com.championship.championship.teams.Teams;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
+
 @Service
 public class ClassificationsTableService {
 
@@ -38,4 +41,10 @@ public class ClassificationsTableService {
         return totalTeams * (totalTeams - 1 );
     }
 
+    public List<ClassificationsTable> listAllTeamsByChampionship(Integer id) {
+        if (this.classificationsTableRepository.findAllTeamsByChampionship(id).isEmpty()) {
+            throw new RuntimeException("Não existe times nesse campeonato!");
+        }
+        return this.classificationsTableRepository.findAllTeamsByChampionship(id);
+    }
 }

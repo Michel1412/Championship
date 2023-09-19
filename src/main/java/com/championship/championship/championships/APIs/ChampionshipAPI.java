@@ -50,4 +50,9 @@ public class ChampionshipAPI {
     public ResponseEntity<List<ClassificationsTable>> listAllTeamsOnChampionship(@PathVariable Integer id) {
         return ResponseEntity.ok(this.championshipService.findAllTeamsByChampionship(id));
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Object> deleteChampionship(@PathVariable Integer id) {
+        return ResponseEntity.ok(this.championshipService.deleteChampionship(id));
+    }
 }
