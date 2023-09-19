@@ -5,6 +5,7 @@ import com.championship.championship.teams.Teams;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Calendar;
 
 @Data
 @Entity
@@ -35,11 +36,11 @@ public class Matches {
     private Integer vistingTeamGoals;
 
     @Column(name = "match_date")
-    private Integer matchDate;
+    private Calendar matchDate;
 
     @Column(name = "match_started")
-    private Integer matchStarted;
+    private boolean matchStarted;
 
     @Column(name = "match_finish")
-    private Integer matchFinished;
+    private boolean matchFinished;
 }

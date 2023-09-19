@@ -21,5 +21,13 @@ public class TeamsAPI {
         return ResponseEntity.ok(this.teamsService.createTeams(teams));
     }
 
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Object> updateTeam(@PathVariable Integer id, @RequestBody Teams teams) {
+        return ResponseEntity.ok(this.teamsService.updateTeam(id, teams));
+    }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Object> deleteTeam(@PathVariable Integer id) {
+        return ResponseEntity.ok(this.teamsService.deleteTeam(id));
+    }
 }
